@@ -1,24 +1,46 @@
-import logo from './logo.svg';
+import {  useEffect } from 'react';
+import logo from './logo.png';
 import './App.css';
 
+const axios = require('axios').default;
+
 function App() {
+    //const [ post, setPost ] = useState<{}>([]);
+    useEffect(() => {
+        axios.get('https://api.covid19api.com/summary').then((res) => {
+            console.log(res)}).catch((error) => {
+                console.log(error)
+            });
+    }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <>
+      <div className="container">
+        <div className="header">
+            <div className='header__title'>
+            <img className='header__title-logo' src={logo} alt="covid_symbol"/>
+          <p className='header__title-text'>STATISTIC</p>
+            </div>
+            <div className='header__search'>
+          <input className='search' type="text" placeholder={'Search....'}/>
+                <img className='loop' src="https://clipart-best.com/img/loupe/loupe-clip-art-6.png" alt='loop'/>
+            </div>
+        </div>
+        <div className="table__head">
+            <div className="table__icon">
+                <p className='table__icon-text'>№</p>
+            </div>
+            <div className="table__country">
+                <p className='table__country-text'>Country</p>
+            </div>
+            <div className="table__total">
+                <p className='table__total-text'>Total confirmed</p>
+            </div>
+        </div>
+        <div className="table__body">
+
+        </div>
+      </div>
+      </>
   );
 }
 
