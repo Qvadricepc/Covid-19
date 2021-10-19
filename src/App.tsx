@@ -1,14 +1,13 @@
-import {  useEffect } from 'react';
+import {  useState, useEffect } from 'react';
 import logo from './logo.png';
 import './App.css';
-
 const axios = require('axios').default;
 
-function App() {
-    //const [ post, setPost ] = useState<{}>([]);
+export const App = () => {
+   const [post, setPost] = useState<{id: number, Country: string, TotalConfirmed: number}[]>([]);
     useEffect(() => {
         axios.get('https://api.covid19api.com/summary').then((res) => {
-            console.log(res)}).catch((error) => {
+            console.log(res.data)}).catch((error) => {
                 console.log(error)
             });
     }, []);
@@ -37,11 +36,12 @@ function App() {
             </div>
         </div>
         <div className="table__body">
-
+            <ul>
+                <li></li>
+            </ul>
         </div>
-      </div>
+          </div>
       </>
   );
 }
 
-export default App;

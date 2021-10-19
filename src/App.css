@@ -137,3 +137,11 @@
 
   color: #FFFFFF;
 }
+
+.table__body {
+  margin-top: 90px;
+}
+
+ul {
+  list-style: none;
+}
