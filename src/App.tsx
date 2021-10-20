@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import VirtualList from 'react-tiny-virtual-list';
+//import VirtualList from 'react-tiny-virtual-list';
 import 'react-virtualized/styles.css';
 import logo from './logo.png';
 import { AutoSizer, List, WindowScroller } from 'react-virtualized';
@@ -10,6 +10,7 @@ const axios = require('axios').default;
 
 export const App: React.FC = () => {
   const [post, setPost] = useState<TSummaryRes>();
+  const [search, setSearch] = useState('');
   useEffect(() => {
     axios
       .get('https://api.covid19api.com/summary')
@@ -21,20 +22,33 @@ export const App: React.FC = () => {
       });
   }, []);
 
+  const enterText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.currentTarget.value);
+  };
+
+  console.log(setSearch);
+
   const lineRenderer = useCallback(
     ({ index, isScrolling, isVisible, key, style }) => {
       const country = post!.Countries[index];
 
       return (
-        <div className="table__head" key={key} style={style}>
-          <div className="table__icon">
-            <p className="table__icon-text">{index + 1}</p>
+        <div
+          className="table__render"
+          key={key}
+          style={style}
+          onClick={() => {
+            console.log('Country pick');
+          }}
+        >
+          <div className="table__render-icon">
+            <p className="table__render-icon-text">{index + 1}</p>
           </div>
-          <div className="table__country">
-            <p className="table__country-text">{country.Country}</p>
+          <div className="table__render-country">
+            <p className="table__render-country-text">{country.Country}</p>
           </div>
-          <div className="table__total">
-            <p className="table__total-text">{country.TotalConfirmed}</p>
+          <div className="table__render-total">
+            <p className="table__render-total-text">{country.TotalConfirmed}</p>
           </div>
         </div>
       );
@@ -50,7 +64,7 @@ export const App: React.FC = () => {
             <p className="header__title-text">STATISTIC</p>
           </div>
           <div className="header__search">
-            <input className="search" type="text" placeholder={'Search....'} />
+            <input className="search" type="text" placeholder={'Search....'} onChange={enterText} />
             <img
               className="loop"
               src="https://clipart-best.com/img/loupe/loupe-clip-art-6.png"

@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+body {
+  background-image: url("https://www.umw.edu/covidcourse/wp-content/uploads/sites/51/2020/05/COVID-19_header.jpg");
+  background-size: 100% ;
+}
+
 .container {
   margin-right: 60px;
   margin-left: 60px;
@@ -86,13 +91,11 @@
 
 .table__icon-text {
   margin-left: 30px;
-
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
   font-size: 24px;
   line-height: 28px;
-
   color: #ffffff;
 }
 
@@ -104,7 +107,6 @@
 
 .table__country-text {
   margin-left: 23px;
-
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
@@ -127,9 +129,65 @@
 }
 
 .table__body {
-  margin-top: 90px;
+  margin-top: 5px;
 }
+
+
 
 ul {
   list-style: none;
+}
+
+.table__render {
+  display: flex;
+  background: ghostwhite;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+}
+
+.table__render:hover {
+  border: 1px solid black;
+}
+
+.table__render-icon {
+  width: 5%;
+}
+
+.table__render-icon-text {
+  margin-left: 30px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+  color: black;
+}
+
+.table__render-country {
+  width: 63%;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #ffffff;
+}
+
+.table__render-country-text {
+  margin-left: 23px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+
+  color: black;
+}
+
+.table__render-total-text {
+  margin-left: 14px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+
+  color: black;
 }
