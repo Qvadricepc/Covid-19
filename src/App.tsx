@@ -4,51 +4,71 @@ import 'react-virtualized/styles.css';
 import logo from './logo.png';
 import { AutoSizer, List, WindowScroller } from 'react-virtualized';
 import './App.css';
-import { AxiosError, AxiosResponse } from 'axios';
-import { TSummaryRes } from './types';
-import BaseModalWrapper from './ModalPopup/BaseModalWrapper';
-const axios = require('axios').default;
-
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { TCountry, TSummaryRes } from './types';
+import { Modal } from './components/modal/modal';
+import { CountryDetails } from './features/country-details';
 export const App: React.FC = () => {
-  const [post, setPost] = useState<TSummaryRes>();
+  const [summary, setSummary] = useState<TSummaryRes>();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [search, setSearch] = useState('');
+  const [clickedIndex, setClickedIndex] = useState<number>();
+  const [filteredCountries, setFilteredCountries] = useState<TCountry[]>([]);
+
   useEffect(() => {
     axios
-      .get('https://api.covid19api.com/summary')
-      .then((res: AxiosResponse<TSummaryRes>) => {
-        setPost(res.data);
+      .get<TSummaryRes>('https://api.covid19api.com/summary')
+      .then((res) => {
+        setSummary(res.data);
       })
       .catch((error: AxiosError) => {
         console.log(error);
       });
   }, []);
 
+  const prepareFilterCountries = (countries: TCountry[], search: string): TCountry[] => {
+    return countries.filter((country) => {
+      if (!search) {
+        return true;
+      }
+      if (country.Country.toLowerCase().includes(search.toLowerCase())) {
+        return true;
+      }
+    });
+  };
+
+  useEffect(() => {
+    const prepared = prepareFilterCountries(summary?.Countries || [], search || '');
+    setFilteredCountries(prepared);
+  }, [summary, search]);
+
   const enterText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.currentTarget.value);
   };
 
-  const toggleModal = () => {
-    setIsModalVisible((wasModalVisible) => !wasModalVisible);
-  };
-
-  const getCountryName = (e: any) => {
-    console.log(e.currentTarget.innerHTML);
+  const openModal = (index: number) => {
+    setClickedIndex(index);
+    setIsModalVisible(true);
   };
 
   const lineRenderer = useCallback(
     ({ index, isScrolling, isVisible, key, style }) => {
-      const country = post!.Countries[index];
+      const country = filteredCountries[index];
 
       return (
-        <div className="table__render" key={key} style={style}>
+        <div
+          className="table__render"
+          key={key}
+          style={style}
+          onClick={() => {
+            openModal(index);
+          }}
+        >
           <div className="table__render-icon">
             <p className="table__render-icon-text">{index + 1}</p>
           </div>
-          <div className="table__render-country" onClick={getCountryName}>
-            <p className="table__render-country-text" onClick={toggleModal}>
-              {country.Country}
-            </p>
+          <div className="table__render-country">
+            <p className="table__render-country-text">{country.Country}</p>
           </div>
           <div className="table__render-total">
             <p className="table__render-total-text">{country.TotalConfirmed}</p>
@@ -56,11 +76,16 @@ export const App: React.FC = () => {
         </div>
       );
     },
-    [post]
+    [filteredCountries]
   );
 
   return (
     <>
+      {clickedIndex !== undefined && (
+        <Modal open={isModalVisible} onClose={() => setIsModalVisible(false)}>
+          <CountryDetails data={filteredCountries[clickedIndex]} />
+        </Modal>
+      )}
       <div className="container">
         <div className="header">
           <div className="header__title">
@@ -92,7 +117,6 @@ export const App: React.FC = () => {
           <div className="table__total">
             <p className="table__total-text">Total confirmed</p>
           </div>
-          <BaseModalWrapper isModalVisible={isModalVisible} onBackdropClick={toggleModal} />
         </div>
 
         <div className="table__body">
@@ -112,7 +136,7 @@ export const App: React.FC = () => {
                         isScrolling={isScrolling}
                         onScroll={onChildScroll}
                         overscanRowCount={2}
-                        rowCount={post?.Countries.length || 0}
+                        rowCount={filteredCountries.length || 0}
                         rowHeight={60}
                         rowRenderer={lineRenderer}
                         //scrollToIndex={scrollToIndex}
@@ -129,10 +153,10 @@ export const App: React.FC = () => {
           {/*<VirtualList
             width="100%"
             height={100}
-            itemCount={post?.Countries?.length || 0}
+            itemCount={summary?.Countries?.length || 0}
             itemSize={50} // Also supports variable heights (array or function getter)
             renderItem={({ index, style }) => {
-              const country = post!.Countries[index];
+              const country = summary!.Countries[index];
               return (
                 <div className="table__head" key={index} style={style}>
                   <div className="table__icon">
@@ -149,7 +173,7 @@ export const App: React.FC = () => {
             }}
           />*/}
 
-          {/*{post?.Countries?.map((country, i) => {
+          {/*{summary?.Countries?.map((country, i) => {
             return (
               <div key={country.ID} className="table__head">
                 <div className="table__icon">
