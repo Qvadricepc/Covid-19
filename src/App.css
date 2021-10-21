@@ -3,8 +3,8 @@
 }
 
 body {
-  background-image: url("https://www.umw.edu/covidcourse/wp-content/uploads/sites/51/2020/05/COVID-19_header.jpg");
-  background-size: 100% ;
+  background-image: url('https://www.umw.edu/covidcourse/wp-content/uploads/sites/51/2020/05/COVID-19_header.jpg');
+  background-size: 100%;
 }
 
 .container {
@@ -132,8 +132,6 @@ body {
   margin-top: 5px;
 }
 
-
-
 ul {
   list-style: none;
 }
@@ -176,18 +174,101 @@ ul {
   font-weight: bold;
   font-size: 24px;
   line-height: 28px;
-
   color: black;
+}
+
+.table__render-country-text:hover {
+  cursor: pointer;
 }
 
 .table__render-total-text {
   margin-left: 14px;
-
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
   font-size: 24px;
   line-height: 28px;
-
   color: black;
+}
+
+.modal__container {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  border-radius: 7px;
+  box-shadow: 0 0 32px rgba(0, 0, 0, 0.5);
+  padding: 40px;
+  width: 600px;
+  height: 400px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+  color: black;
+}
+
+.modal__overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal__country-name {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 48px;
+  line-height: 56px;
+}
+
+.modal__table-text {
+  width: 80%;
+  margin-left: 15px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.modal__table {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 40px;
+}
+
+.modal__table-icon {
+}
+
+.modal__table-number {
+}
+
+.modal__button {
+  width: 171px;
+  height: 49px;
+  display: inline-block;
+  padding: 0.3em 1.2em;
+  margin: 20px 0.3em 0.3em 0;
+  border-radius: 20px;
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #2196F3;
+  border-color: #2196F3;
+  text-align: center;
+  transition: all 0.2s;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
 }

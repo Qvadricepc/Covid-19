@@ -6,10 +6,12 @@ import { AutoSizer, List, WindowScroller } from 'react-virtualized';
 import './App.css';
 import { AxiosError, AxiosResponse } from 'axios';
 import { TSummaryRes } from './types';
+import BaseModalWrapper from './ModalPopup/BaseModalWrapper';
 const axios = require('axios').default;
 
 export const App: React.FC = () => {
   const [post, setPost] = useState<TSummaryRes>();
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [search, setSearch] = useState('');
   useEffect(() => {
     axios
@@ -26,26 +28,27 @@ export const App: React.FC = () => {
     setSearch(e.currentTarget.value);
   };
 
-  console.log(setSearch);
+  const toggleModal = () => {
+    setIsModalVisible((wasModalVisible) => !wasModalVisible);
+  };
+
+  const getCountryName = (e: any) => {
+    console.log(e.currentTarget.innerHTML);
+  };
 
   const lineRenderer = useCallback(
     ({ index, isScrolling, isVisible, key, style }) => {
       const country = post!.Countries[index];
 
       return (
-        <div
-          className="table__render"
-          key={key}
-          style={style}
-          onClick={() => {
-            console.log('Country pick');
-          }}
-        >
+        <div className="table__render" key={key} style={style}>
           <div className="table__render-icon">
             <p className="table__render-icon-text">{index + 1}</p>
           </div>
-          <div className="table__render-country">
-            <p className="table__render-country-text">{country.Country}</p>
+          <div className="table__render-country" onClick={getCountryName}>
+            <p className="table__render-country-text" onClick={toggleModal}>
+              {country.Country}
+            </p>
           </div>
           <div className="table__render-total">
             <p className="table__render-total-text">{country.TotalConfirmed}</p>
@@ -55,6 +58,7 @@ export const App: React.FC = () => {
     },
     [post]
   );
+
   return (
     <>
       <div className="container">
@@ -64,7 +68,13 @@ export const App: React.FC = () => {
             <p className="header__title-text">STATISTIC</p>
           </div>
           <div className="header__search">
-            <input className="search" type="text" placeholder={'Search....'} onChange={enterText} />
+            <input
+              className="search"
+              type="text"
+              placeholder={'Search....'}
+              onChange={enterText}
+              value={search}
+            />
             <img
               className="loop"
               src="https://clipart-best.com/img/loupe/loupe-clip-art-6.png"
@@ -82,6 +92,7 @@ export const App: React.FC = () => {
           <div className="table__total">
             <p className="table__total-text">Total confirmed</p>
           </div>
+          <BaseModalWrapper isModalVisible={isModalVisible} onBackdropClick={toggleModal} />
         </div>
 
         <div className="table__body">
