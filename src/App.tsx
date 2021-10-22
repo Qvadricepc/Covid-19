@@ -4,10 +4,14 @@ import 'react-virtualized/styles.css';
 import logo from './logo.png';
 import { AutoSizer, List, WindowScroller } from 'react-virtualized';
 import './App.css';
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { TCountry, TSummaryRes } from './types';
 import { Modal } from './components/modal/modal';
 import { CountryDetails } from './features/country-details';
+import { faSearchPlus } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 export const App: React.FC = () => {
   const [summary, setSummary] = useState<TSummaryRes>();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -31,7 +35,10 @@ export const App: React.FC = () => {
       if (!search) {
         return true;
       }
-      if (country.Country.toLowerCase().includes(search.toLowerCase())) {
+      if (
+        country.Country.toLowerCase().includes(search.toLowerCase()) ||
+        country.TotalConfirmed.toString().includes(search)
+      ) {
         return true;
       }
     });
@@ -79,6 +86,8 @@ export const App: React.FC = () => {
     [filteredCountries]
   );
 
+  // @ts-ignore
+  // @ts-ignore
   return (
     <>
       {clickedIndex !== undefined && (
@@ -92,6 +101,14 @@ export const App: React.FC = () => {
             <img className="header__title-logo" src={logo} alt="covid_symbol" />
             <p className="header__title-text">STATISTIC</p>
           </div>
+          <div className="filter__buttons">
+            <input type="checkbox" name="A-Z" />
+            A-Z
+            <input type="checkbox" name="Z-A" />
+            Z-A
+            <input type="checkbox" name="fromMaxToMin" />
+            <FontAwesomeIcon icon={faArrowDown} />
+          </div>
           <div className="header__search">
             <input
               className="search"
@@ -100,11 +117,7 @@ export const App: React.FC = () => {
               onChange={enterText}
               value={search}
             />
-            <img
-              className="loop"
-              src="https://clipart-best.com/img/loupe/loupe-clip-art-6.png"
-              alt="loop"
-            />
+            <FontAwesomeIcon icon={faSearchPlus} />
           </div>
         </div>
         <div className="table__head">

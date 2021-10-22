@@ -191,4 +191,6 @@ ul {
   color: black;
 }
 
-
+.filter__buttons {
+  margin-top: 130px;
+}
