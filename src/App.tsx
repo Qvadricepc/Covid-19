@@ -9,8 +9,10 @@ import { TCountry, TSummaryRes } from './types';
 import { Modal } from './components/modal/modal';
 import { CountryDetails } from './features/country-details';
 import { faSearchPlus } from '@fortawesome/free-solid-svg-icons';
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { prepareFilterCountries, prepareSorting } from './services/countries-transducers';
+import { TSort } from './types';
+import { SortingArrows } from './features/sorting-arrows';
 
 export const App: React.FC = () => {
   const [summary, setSummary] = useState<TSummaryRes>();
@@ -18,6 +20,7 @@ export const App: React.FC = () => {
   const [search, setSearch] = useState('');
   const [clickedIndex, setClickedIndex] = useState<number>();
   const [filteredCountries, setFilteredCountries] = useState<TCountry[]>([]);
+  const [sorting, setSorting] = useState<TSort>({ sortBy: 'Country', sortOrder: 'asc' } as TSort);
 
   useEffect(() => {
     axios
@@ -30,33 +33,19 @@ export const App: React.FC = () => {
       });
   }, []);
 
-  const prepareFilterCountries = (countries: TCountry[], search: string): TCountry[] => {
-    return countries.filter((country) => {
-      if (!search) {
-        return true;
-      }
-      if (
-        country.Country.toLowerCase().includes(search.toLowerCase()) ||
-        country.TotalConfirmed.toString().includes(search)
-      ) {
-        return true;
-      }
-    });
-  };
-
   useEffect(() => {
-    const prepared = prepareFilterCountries(summary?.Countries || [], search || '');
+    const prepared = prepareFilterCountries(summary?.Countries || [], search || '', sorting);
     setFilteredCountries(prepared);
-  }, [summary, search]);
+  }, [summary, search, sorting]);
 
-  const enterText = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const enterText = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.currentTarget.value);
-  };
+  }, []);
 
-  const openModal = (index: number) => {
+  const openModal = useCallback((index: number) => {
     setClickedIndex(index);
     setIsModalVisible(true);
-  };
+  }, []);
 
   const lineRenderer = useCallback(
     ({ index, isScrolling, isVisible, key, style }) => {
@@ -86,8 +75,6 @@ export const App: React.FC = () => {
     [filteredCountries]
   );
 
-  // @ts-ignore
-  // @ts-ignore
   return (
     <>
       {clickedIndex !== undefined && (
@@ -101,14 +88,7 @@ export const App: React.FC = () => {
             <img className="header__title-logo" src={logo} alt="covid_symbol" />
             <p className="header__title-text">STATISTIC</p>
           </div>
-          <div className="filter__buttons">
-            <input type="checkbox" name="A-Z" />
-            A-Z
-            <input type="checkbox" name="Z-A" />
-            Z-A
-            <input type="checkbox" name="fromMaxToMin" />
-            <FontAwesomeIcon icon={faArrowDown} />
-          </div>
+          <div className="filter__buttons"></div>
           <div className="header__search">
             <input
               className="search"
@@ -125,10 +105,28 @@ export const App: React.FC = () => {
             <p className="table__icon-text">№</p>
           </div>
           <div className="table__country">
-            <p className="table__country-text">Country</p>
+            <p
+              className="table__country-text"
+              onClick={() => {
+                setSorting(prepareSorting('Country', sorting));
+              }}
+            >
+              Country
+              {sorting.sortBy === 'Country' && <SortingArrows sortOrder={sorting.sortOrder} />}
+            </p>
           </div>
           <div className="table__total">
-            <p className="table__total-text">Total confirmed</p>
+            <p
+              className="table__total-text"
+              onClick={() => {
+                setSorting(prepareSorting('TotalConfirmed', sorting));
+              }}
+            >
+              Total confirmed
+              {sorting.sortBy === 'TotalConfirmed' && (
+                <SortingArrows sortOrder={sorting.sortOrder} />
+              )}
+            </p>
           </div>
         </div>
 

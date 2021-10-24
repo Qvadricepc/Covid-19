@@ -28,3 +28,8 @@ export type TSummaryRes = {
   Countries: TCountry[];
   Date: string;
 };
+
+export type TSort = {
+  sortBy: keyof TCountry;
+  sortOrder: 'asc' | 'desc';
+};

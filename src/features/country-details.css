@@ -1,19 +1,19 @@
 .country__country-name {
-    font-family: Roboto;
-    font-style: normal;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     font-weight: bold;
     font-size: 48px;
-    line-height: 56px;
+    line-height: 80px;
+
 }
 
 .country__table-text {
     width: 80%;
     margin-left: 15px;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
     font-size: 24px;
-    line-height: 28px;
+
 }
 
 .country__table {
